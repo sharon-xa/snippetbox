@@ -8,10 +8,13 @@ import (
 	"os"
 
 	_ "github.com/go-sql-driver/mysql"
+
+	"github.com/sharon-xa/snippetbox/internal/models"
 )
 
 type application struct {
-	logger *slog.Logger
+	logger  *slog.Logger
+	snippet *models.SnippetModel
 }
 
 func main() {
@@ -27,12 +30,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	// We also defer a call to db.Close(), so that the connection pool is closed
-	// before the main() function exits.
 	defer db.Close()
 
 	app := &application{
-		logger: logger,
+		logger:  logger,
+		snippet: &models.SnippetModel{DB: db},
 	}
 
 	logger.Info("Starting server", slog.Any("PORT", *addr))
